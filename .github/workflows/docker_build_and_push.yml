@@ -1,0 +1,42 @@
+# name: Build and push docker image
+# on:
+#   push:
+#     branches:
+#       - '*'
+
+# env:
+#   AWS_REGION: us-east-1
+
+# jobs:
+#   docker-build:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@main
+
+#       - name: Configure AWS creds
+#         uses: aws-actions/configure-aws-credentials@v1
+#         with:
+#           aws-access-key-id: ${{ secrets.FISTER_AWS_ACCESS_KEY }}
+#           aws-secret-access-key: ${{ secrets.FISTER_AWS_SECRET_KEY }}
+#           aws-region: ${{ env.AWS_REGION }}
+
+#       - name: Login to ECR
+#         id: login-ecr
+#         uses: aws-actions/amazon-ecr-login@v1
+
+#       - name: Set environment variables
+#         run: |
+#           echo "DOCKER_IMAGE_URI=499543221288.dkr.ecr.us-east-1.amazonaws.com/fister" >> $GITHUB_ENV
+#           echo "DOCKER_IMAGE_TAG=$GITHUB_REF_NAME" >> $GITHUB_ENV
+
+#       - name: Build fister docker image
+#         run: |
+#           docker build -f Dockerfile -t $DOCKER_IMAGE_URI:$DOCKER_IMAGE_TAG-$GITHUB_RUN_NUMBER .
+
+#       - name: Push image to ECR
+#         run: |
+#           docker push $DOCKER_IMAGE_URI:$DOCKER_IMAGE_TAG-$GITHUB_RUN_NUMBER
+
+#       - name: echo info
+#         run: echo "Your container is now available at $DOCKER_IMAGE_URI:$DOCKER_IMAGE_TAG-$GITHUB_RUN_NUMBER"
